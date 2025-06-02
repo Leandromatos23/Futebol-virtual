@@ -1,25 +1,32 @@
-# ⚽ Futebol Virtual - Análise de Jogos
+import streamlit as st
+import pandas as pd
 
-Aplicativo desenvolvido com Streamlit para análise de partidas de futebol virtual, com foco em filtros como over 2.5 / over 3.5 gols, viradas de jogo e placares exatos.
+st.set_page_config(page_title="Futebol Virtual", layout="centered", page_icon="⚽")
 
-## 🔍 Funcionalidades
+st.title("⚽ Análise de Futebol Virtual")
+st.markdown("Bem-vindo! Aqui você pode filtrar partidas por critérios como Over 2.5, viradas e placares exatos.")
 
-- Filtro por **Over 2.5 / Over 3.5 gols**
-- Detecção de **viradas** (time perde o 1º tempo e vira no 2º)
-- Destaque para **placares exatos**: 4x0, 0x4, 5x0, 0x5
-- Interface simples, escura e responsiva (funciona no celular)
-- Planejamento futuro para integração com dados reais da Bet365
+# Upload de arquivo CSV com dados simulados
+uploaded_file = st.file_uploader("Envie um arquivo .csv com os resultados", type="csv")
 
-## 🚀 Como acessar
+if uploaded_file:
+    df = pd.read_csv(uploaded_file)
 
-Você pode acessar o app aqui:  
-👉 [Abrir o app no navegador](https://futebol-virtual-5ijrb54cnebdmycusqbyga.streamlit.app)
+    # Exibir dados
+    st.subheader("📊 Dados carregados")
+    st.dataframe(df)
 
-## 🧠 Tecnologias usadas
+    # Filtro: Over 2.5 gols
+    st.subheader("🔎 Filtro: Over 2.5 gols")
+    over_25 = df[df['total_gols'] > 2.5]
+    st.write(f"Partidas com mais de 2.5 gols: {len(over_25)}")
+    st.dataframe(over_25)
 
-- [Python 3.10+](https://www.python.org/)
-- [Streamlit](https://streamlit.io/) – criação de apps interativos em Python
-- GitHub e Streamlit Cloud para deploy
+    # Filtro: Viradas (perdeu o 1º tempo, venceu o jogo)
+    st.subheader("🔄 Filtro: Viradas")
+    viradas = df[(df['1T_time_casa'] < df['1T_time_fora']) & (df['FT_time_casa'] > df['FT_time_fora'])]
+    st.write(f"Viradas encontradas: {len(viradas)}")
+    st.dataframe(viradas)
 
-## 📁 Estrutura do projeto
-
+else:
+    st.info("Envie um arquivo CSV com dados de partidas para começar.")
