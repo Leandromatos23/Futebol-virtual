@@ -1,38 +1,29 @@
-app.py import streamlit as st
+import streamlit as st
 
-# Configurar o tema escuro
-st.set_page_config(page_title="Futebol Virtual", page_icon="⚽", layout="centered")
+st.set_page_config(page_title="Futebol Virtual", layout="centered")
 
-# Estilo CSS para modo escuro básico
-dark_style = """
-<style>
-    body {
-        background-color: #121212;
-        color: #eeeeee;
-    }
-    .stButton>button {
-        background-color: #1e88e5;
-        color: white;
-    }
-    .stTextInput>div>input {
-        background-color: #333333;
-        color: white;
-    }
-</style>
-"""
-st.markdown(dark_style, unsafe_allow_html=True)
+st.title("Análise de Futebol Virtual")
 
-st.title("Futebol Virtual - Análise Over 2.5")
+st.markdown("Escolha o número mínimo de gols para filtrar jogos:")
 
-# Exemplo simples de filtro
-st.sidebar.header("Filtros")
-time_selecionado = st.sidebar.selectbox("Selecione o time:", ["Todos", "Time A", "Time B", "Time C"])
-over_2_5 = st.sidebar.checkbox("Mostrar só jogos Over 2.5", value=True)
+# Slider interativo
+over_goals = st.slider("Gols mínimos (over)", 0, 10, 2)
 
-st.write(f"Time selecionado: {time_selecionado}")
-st.write(f"Filtro Over 2.5 ativado? {'Sim' if over_2_5 else 'Não'}")
+# Dados simulados
+jogos = [
+    {"time1": "Time A", "time2": "Time B", "gols": 3},
+    {"time1": "Time C", "time2": "Time D", "gols": 1},
+    {"time1": "Time E", "time2": "Time F", "gols": 5},
+    {"time1": "Time G", "time2": "Time H", "gols": 2},
+]
 
-# Aqui você colocaria a lógica para coletar e mostrar os dados reais
+# Filtro
+jogos_filtrados = [j for j in jogos if j["gols"] > over_goals]
 
-st.write("Aqui aparecerão os dados e análises do futebol virtual.")
+st.subheader("Jogos filtrados:")
 
+if jogos_filtrados:
+    for jogo in jogos_filtrados:
+        st.write(f"**{jogo['time1']} x {jogo['time2']}** – Gols: {jogo['gols']}")
+else:
+    st.write("Nenhum jogo com essa quantidade de gols.")Atualiza app com código funcional para teste
